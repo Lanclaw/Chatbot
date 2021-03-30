@@ -11,7 +11,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 class Lang():
     def __init__(self, name):
         self.name = name
-        self.word2id = {}
+        self.word2id = {'__PAD__': 0}
         self.word_count = {}
         self.id2word = {0: 'SOS', 1: 'EOS'}
         self.n_words = 2
@@ -60,7 +60,7 @@ def readLangs(lang1, lang2):
 
 
 def sen2id(lang, sentence):
-    return [lang.word2id[word] for word in sentence.split()]
+    return [lang.word2id.get(word, 0) for word in sentence.split()]
 
 
 def sen2tensor(lang, sentence):
@@ -75,5 +75,11 @@ def pair2tensor(input_lang, output_lang, pair):
     return (input_tensor, output_tensor)
 
 
+def id2sen(lang, index_list):
+    return [lang.id2word[id] for id in index_list]
+
+
 input_lang, output_lang, pairs = readLangs('human', 'machine')
+
+
 
